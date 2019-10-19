@@ -47,7 +47,7 @@ def find_and_match_features(floor_img, door_img):
     door_img = door_img
 
     img1 = cv2.imread(floor_plan) # queryImage
-    img2 = cv2.imread(door_img) # floor planImage
+    img2 = cv2.imread(door_img) # floor plan Image
 
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create(sigma=.5)
@@ -56,7 +56,7 @@ def find_and_match_features(floor_img, door_img):
     kp1, des1 = sift.detectAndCompute(img1,None)
     kp2, des2 = sift.detectAndCompute(img2,None)
 
-    # BFMatcher with default params
+    # Use BFMatcher (Brute-Force matcher) with default params
     bf = cv2.BFMatcher()
 
     des1 = np.float32(des1)
@@ -64,7 +64,7 @@ def find_and_match_features(floor_img, door_img):
 
     matches = bf.knnMatch(des1, des2, k=2)
 
-    # Apply ratio test
+    # Apply ratio test needed for SIFT
     good = []
     for m,n in matches:
         if m.distance < 0.6*n.distance:
@@ -128,10 +128,11 @@ def narrow_matches(coord, radius):
     # Set flags (Just to avoid line break in the code)
     flags = cv2.KMEANS_RANDOM_CENTERS
 
+    # Cap maximum clusters to 2500 (it is unlikely any floor plan is going to have more than 2500 doors).
     if clusters > 2500:
         clusters = 2500
 
-    # Apply KMeans
+    # Apply KMeans-clustering. 
     compactness, labels, centers = cv2.kmeans(coord , clusters, None, criteria, 10, flags)
 
     centers = centers.astype(int)
@@ -178,7 +179,8 @@ def mark(coords, floor_image):
     imgDoors = cv2.imread(floor_image)
 
     save_file = floor_image[:-4] + '_result.jpg'
-
+    
+    # Mark each door
     for door in coords:
         pixel = door.astype(int)
         x = pixel[0]
@@ -262,7 +264,6 @@ def main():
             result_window = sg.Window('Result', grab_anywhere=False).Layout([[sg.Image(filename=floor_display)]]).Finalize()
 
             continue
-
 
 
 main()
