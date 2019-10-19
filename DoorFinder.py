@@ -1,3 +1,25 @@
+'''
+This software tool is the final product from my Research Experience for Undergraduates 
+at Wichita State University over the summer of 2019, as funded by the National Science 
+Foundation. It is based off IBeaconMap, a software tool developed by Seyed Ali Cheraghi, 
+Vinod Namboodiri, and Kaushik Sinha.
+
+The paper that outlines the specific of this software can be found here:
+
+https://arxiv.org/abs/1802.05735
+
+This program is able to mark and identify doors as seen on a floor plan image,
+a necessary step in the deployment of bluetooth beacons in indoor navigation.
+The purpose of this program is to remove the need for manual marking of doors,
+such that the beacon locations for any given floor can quickly and accurately
+identified.
+Known bugs: As of right now, the program will crash upon exiting; however, this does not
+affect or delete the output image with marked doors.
+
+AUTHOR: Charlie Broadbent
+'''
+
+
 import PySimpleGUI as sg
 import door_finder as df
 import time
@@ -245,6 +267,7 @@ def main():
 
 main()
 
+# Remove unnecessary images.
 for f in glob.glob("*_result.png"):
     os.remove(f)
 
